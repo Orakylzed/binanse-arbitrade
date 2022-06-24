@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #fcfbf4;
+}
+
+.wraper {
+    height: 60px;
+}
+
+#refresh {
+    font-size: 16px;
+    padding: 10px 35px;
+    background-color: #f3f1f1;
+    border: 2px solid #dddddd;
+    border-radius: 5px;
+    transition-duration: 0.4s;
+}
+
+#refresh:hover {
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.btc-price-wrap {
+    margin-left: 35px;
+    display: inline-block;
+    font-size: 18px;
+}
+
+.btc-price-head {
+    font-size: 22px;
+}
+
+.status {
+    display: inline-block;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0 30px;
+    padding: 5px;
+    color: rgb(97, 177, 18);
+    font-size: 26px;
+}
+
+.hide {
+    display: none;
+}
+
+#root {
+    margin-top: 20px;
+}
+
+.coin-price {
+    padding: 3px;
+    font-size: 18px;
+    letter-spacing: .3px;
+    border-bottom: 1px dashed #c7b692;
+}
+
+span {
+    display: inline-block;
+}
+
+.coin-name {
+    font-weight: 700;
+    width: 80px;
+}
+
+.usdt-price {
+    width: 160px;
+}
+
+.btc-price {
+    width: 140px;
+}
+
+.plus-profit {
+    background-color: rgb(163, 255, 71);
+}
+
+.minus-profit {
+    background-color: rgb(255, 170, 170);
+}
+
