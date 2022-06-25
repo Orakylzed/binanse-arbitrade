@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
     <link rel="stylesheet" href="style.css">
     <title>Binance Arbitrade</title>
 </head>
@@ -12,6 +16,20 @@
         <button id="refresh">Update</button>
         <div class="btc-price-wrap">BTC - USDT: <span class="btc-price-head"></span></div>
         <div class="status hide">Updated</div>
+        <div class="control">
+            <div class="check">
+                <input type="checkbox" id="all-pairs" name="allPairs">
+                <label for="all-pairs">Show all pairs</label>
+            </div>
+            <div class="check">
+                <input type="checkbox" id="sort" name="sort" checked>
+                <label for="sort">Sort by profit</label>
+            </div>
+            <div class="check">
+                <input type="input" id="min-profit" placeholder="Min profit">
+            </div>
+            <button class="clear" id="clear">Clear</button>
+        </div>
     </div>
     <div id="root"></div>
 
