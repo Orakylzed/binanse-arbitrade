@@ -163,3 +163,19 @@ span {
     background-color: rgb(255, 170, 170);
 }
 
+/*  Мобільна версія  */
+
+@media (max-width: 500px) {
+    #root {
+        margin-top: 200px;
+    }
+
+    .control {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .check {
+        width: 100%;
+    }
+}
