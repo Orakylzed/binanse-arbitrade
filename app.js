@@ -6,7 +6,6 @@ const statusElem = document.querySelector('.status');
 const allPairsElem = document.querySelector('#all-pairs');
 const sortElem = document.querySelector('#sort');
 const minProfitElem = document.querySelector('#min-profit');
-const clearBtn = document.querySelector('#clear');
 const reversElem = document.querySelector('#revers');
 
 
@@ -23,10 +22,6 @@ refreshBtn.onclick = () => {
     sendRequest(requestURL).then( data => {DATA = data; dataHundler();} ).catch( (err) => console.log(err) );
     rootElement.innerHTML = '<div class="loading"></div>';
     checkMinProfit();
-}
-
-clearBtn.onclick = () => {
-    minProfitElem.value = '';
 }
 
 function sendRequest(url) {
@@ -48,7 +43,7 @@ function sendRequest(url) {
 function dataAnalis(arr) {
         curentPrices = [];
     for (let i = 0; i < arr.length; i++ ) {
-        curentPrices.push({name: arr[i].symbol, price: arr[i].askPrice});
+        curentPrices.push({name: arr[i].symbol, price: arr[i].askPrice, bidPrice: arr[i].bidPrice});
     }
 }
 
@@ -77,7 +72,12 @@ function getCoinList() {
 function getCoinPairObj() {
     coinPairObj = {};
     for (let i = 0; i < curentPrices.length; i++) {
-        coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].price;
+        if ( `${curentPrices[i].name}`.includes('USDT') ) {
+            coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].price;
+        }   else if (`${curentPrices[i].name}`.includes('BTC')) {
+            coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].bidPrice;
+        }
+        // coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].price;
     }
     btcUsdtPrice = coinPairObj.BTCUSDT;
 }
@@ -94,11 +94,7 @@ function getArbitradeList() {
     }
     for (let i = 0; i < arbitradeList.length; i++) {
         let profit = 0;
-        if ( !reversElem.checked ) {
-            profit = calcProfit(arbitradeList[i][1], arbitradeList[i][2], btcUsdtPrice);
-        } else {
-            profit = ((100 / btcUsdtPrice * 0.999) / arbitradeList[i][2] * 0.999) * arbitradeList[i][1] * 0.999 - 100;
-        }
+        profit = calcProfit(arbitradeList[i][1], arbitradeList[i][2], btcUsdtPrice);
         arbitradeList[i].push( profit );
     }
     if ( sortElem.checked ) {
