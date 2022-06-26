@@ -132,7 +132,7 @@ function showPairs() {
 
 function calcProfit(pr1, pr2, prbtc) {
     let profit;
-    profit = ((100 / +pr1 * 0.999) * +pr2 * 0.999) * +prbtc - 100;
+    profit = ((100 / +pr1 * 0.999) * +pr2 * 0.999) * +prbtc * 0.999 - 100;
     return profit;
 }
 
