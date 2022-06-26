@@ -7,6 +7,7 @@ const allPairsElem = document.querySelector('#all-pairs');
 const sortElem = document.querySelector('#sort');
 const minProfitElem = document.querySelector('#min-profit');
 const clearBtn = document.querySelector('#clear');
+const reversElem = document.querySelector('#revers');
 
 
 let DATA;
@@ -92,7 +93,12 @@ function getArbitradeList() {
         }
     }
     for (let i = 0; i < arbitradeList.length; i++) {
-        let profit = calcProfit(arbitradeList[i][1], arbitradeList[i][2], btcUsdtPrice);
+        let profit = 0;
+        if ( !reversElem.checked ) {
+            profit = calcProfit(arbitradeList[i][1], arbitradeList[i][2], btcUsdtPrice);
+        } else {
+            profit = ((100 / btcUsdtPrice * 0.999) / arbitradeList[i][2] * 0.999) * arbitradeList[i][1] * 0.999 - 100;
+        }
         arbitradeList[i].push( profit );
     }
     if ( sortElem.checked ) {
