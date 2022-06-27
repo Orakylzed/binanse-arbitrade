@@ -11,6 +11,8 @@ const reversElem = document.querySelector('#revers');
 
 let DATA;
 let btcUsdtPrice = 0;
+let ethUsdtPrice = 0;
+let bnbUsdtPrice = 0;
 let curentPrices;
 let coinList = [];
 let coinPairObj = {};
@@ -51,9 +53,11 @@ function arrFilter() {
     for ( let i = curentPrices.length - 1; i>= 0; i--) {
         let btc = curentPrices[i].name.includes('BTC');
         let usdt = curentPrices[i].name.includes('USDT');
+        let eth = curentPrices[i].name.includes('ETH');
+        let bnb = curentPrices[i].name.includes('BNB');
         let up = curentPrices[i].name.includes('UP');
         let down = curentPrices[i].name.includes('DOWN');
-        if ( (!btc && !usdt) || up || down) {
+        if ( (!btc && !usdt && !eth && !bnb) || up || down) {
             curentPrices.splice(i, 1);
         }
     }
@@ -74,12 +78,18 @@ function getCoinPairObj() {
     for (let i = 0; i < curentPrices.length; i++) {
         if ( `${curentPrices[i].name}`.includes('USDT') ) {
             coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].price;
-        }   else if (`${curentPrices[i].name}`.includes('BTC')) {
+        } else if (`${curentPrices[i].name}`.includes('BTC')) {
+            coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].bidPrice;
+        } else if (`${curentPrices[i].name}`.includes('ETH')) {
+            coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].bidPrice;
+        } else if (`${curentPrices[i].name}`.includes('BNB')) {
             coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].bidPrice;
         }
-        // coinPairObj[`${curentPrices[i].name}`] = curentPrices[i].price;
+        
     }
     btcUsdtPrice = coinPairObj.BTCUSDT;
+    ethUsdtPrice = coinPairObj.ETHUSDT;
+    bnbUsdtPrice = coinPairObj.BNBUSDT;
 }
 
 function getArbitradeList() {
@@ -88,7 +98,7 @@ function getArbitradeList() {
     for (let i = 0; i < coinList.length; i++) {
         if ((coinPairObj[`${coinList[i]}USDT`] != undefined) && (coinPairObj[`${coinList[i]}USDT`] != 0)) {
             if ((coinPairObj[`${coinList[i]}BTC`] != undefined) && (coinPairObj[`${coinList[i]}BTC`] != 0)) {
-                arbitradeList.push( [coinList[i], coinPairObj[`${coinList[i]}USDT`], coinPairObj[`${coinList[i]}BTC`]] );
+                arbitradeList.push( [coinList[i], coinPairObj[`${coinList[i]}USDT`], coinPairObj[`${coinList[i]}BTC`], coinPairObj[`${coinList[i]}ETH`], coinPairObj[`${coinList[i]}BNB`]] );
             }
         }
     }
@@ -98,7 +108,7 @@ function getArbitradeList() {
         arbitradeList[i].push( profit );
     }
     if ( sortElem.checked ) {
-        arbitradeList.sort( (a, b) => a[3] > b[3] ? -1 : 1);
+        arbitradeList.sort( (a, b) => a[5] > b[5] ? -1 : 1);
     }
 }
 
@@ -108,18 +118,18 @@ function showPairs() {
         let str = '';
         let elem = document.createElement('div');
         elem.classList.add('coin-price');
-        if ( arbitradeList[i][3] > minProfitValue ) {
+        if ( arbitradeList[i][5] > minProfitValue ) {
             str += `<span class="coin-name">${ arbitradeList[i][0] }</span>: `;
             str += `in USDT - <span class="usdt-price">${ arbitradeList[i][1] }</span>;`;
             str += ` in BTC - <span class="btc-price">${ arbitradeList[i][2] }</span>`;
-            str += ` Profit: <span class="profit plus-profit">${ String(arbitradeList[i][3]).slice(0, 4) }</span> %`;
+            str += ` Profit: <span class="profit plus-profit">${ String(arbitradeList[i][5]).slice(0, 4) }</span> %`;
             elem.innerHTML = str;
             rootElement.append(elem);
         } else if ( allPairsElem.checked ) {
             str += `<span class="coin-name">${ arbitradeList[i][0] }</span>: `;
             str += `in USDT - <span class="usdt-price">${ arbitradeList[i][1] }</span>;`;
             str += ` in BTC - <span class="btc-price">${ arbitradeList[i][2] }</span>`;
-            str += ` Profit: <span class="profit minus-profit">${ String(arbitradeList[i][3]).slice(0, 5) }</span> %`;
+            str += ` Profit: <span class="profit minus-profit">${ String(arbitradeList[i][5]).slice(0, 5) }</span> %`;
             elem.innerHTML = str;
             rootElement.append(elem);
         }
@@ -132,9 +142,31 @@ function showPairs() {
     }, 1500)
 }
 
+function showEthProfit() {
+    for ( let i = 0; i < arbitradeList.length; i++ ) {
+        if (arbitradeList[3] != undefined) {
+            let prof = calcProfit(arbitradeList[i][1], arbitradeList[i][3], ethUsdtPrice);
+            if (prof > 0 ) {
+                rootElement.innerHTML += `${arbitradeList[i][0]} -> ETH ${prof}<br>`;
+            }
+        }
+    }
+}
+
+function showBnbProfit() {
+    for ( let i = 0; i < arbitradeList.length; i++ ) {
+        if (arbitradeList[4] != undefined) {
+            let prof = calcProfit(arbitradeList[i][1], arbitradeList[i][4], bnbUsdtPrice);
+            if (prof > 0 ) {
+                rootElement.innerHTML += `${arbitradeList[i][0]} -> BNB ${prof}<br>`;
+            }
+        }
+    }
+}
+
 function calcProfit(pr1, pr2, prbtc) {
     let profit;
-    profit = ((100 / +pr1 * 0.999) * +pr2 * 0.999) * +prbtc * 0.999 - 100;
+    profit = ((100 / +pr1 * 0.99925) * +pr2 * 0.99925) * +prbtc * 0.99925 - 100;
     return profit;
 }
 
@@ -151,6 +183,8 @@ function dataHundler() {
     getCoinPairObj();
     getArbitradeList();
     showPairs();
+    showEthProfit()
+
 }
 
 
